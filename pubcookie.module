@@ -63,18 +63,21 @@ function pubcookie_page() {
     drupal_goto();
     }
 
-  if (!isset($_SERVER['REMOTE_USER']) && !isset($_SERVER['REDIRECT_REMOTE_USER'])) {
-    watchdog('pubcookie', 'Pubcookie request received but neither REMOTE_USER nor REDIRECT_REMOTE_USER were set.', array(), WATCHDOG_WARNING);
+  if (!isset($_SERVER['REDIRECT_uid'])) {
+    watchdog('pubcookie', 'Pubcookie (shibboleth) request received but REDIRECT_uid not set.', array(), WATCHDOG_WARNING);
     drupal_set_message(t('Pubcookie login failed.'), 'error');
     drupal_goto();
   }
 
+  $pubcookie_user = check_plain($_SERVER['REDIRECT_uid']);
+  /*
   if (isset($_SERVER['REMOTE_USER'])) {
     $pubcookie_user = check_plain($_SERVER['REMOTE_USER']);
   }
   else {
     $pubcookie_user = check_plain($_SERVER['REDIRECT_REMOTE_USER']);
   }
+  */
   watchdog('pubcookie', 'Received login request from %user', array('%user' => $pubcookie_user));
   if (PUBCOOKIE_VERBOSE_LOGGING) {
     watchdog('pubcookie', 'Session ID is %sessid', array('%sessid' => check_plain(session_id())));
@@ -189,6 +192,8 @@ function pubcookie_user($type, $edit, &$user, $category = NULL) {
         if (PUBCOOKIE_VERBOSE_LOGGING) {
           watchdog('pubcookie', 'Inserting value %val into profile field %field', array('%val' => check_plain($pubcookie_record[$key]), '%field' => check_plain($data->name)));
         }
+        db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $data->fid, $user->
+uid);
         db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $data->fid, $user->uid, $pubcookie_record[$key]);
       }
     }
