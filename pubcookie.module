@@ -95,7 +95,7 @@ function pubcookie_page() {
     }
   }
 
-  $domain = variable_get('pubcookie_domain', '');
+  $domain = variable_get('pubcookie_domain', pubcookie_default_domain());
 
   if ($domain == '') {
     watchdog('pubcookie', 'Login failed. You must set the pubcookie domain under Administer - Site configuration - Pubcookie.', array(), WATCHDOG_ERROR);
@@ -218,6 +218,8 @@ function pubcookie_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       $blocks = array();
       $blocks[0]['info'] = t('Pubcookie login');
+      $blocks[0]['status'] = FALSE;
+      $blocks[0]['region'] = '';
       return $blocks;
 
     case 'view':
@@ -266,18 +268,7 @@ function pubcookie_login_link() {
  */
 function pubcookie_settings() {
   global $base_url; // http://www.example.edu/drupal
-  $array = explode('/', $base_url);
-  $base_domain = $array[2]; // www.example.edu
-  $parts = explode('.', $base_domain);
-
-  if (count($parts) == 1) {
-    drupal_set_message(t('Pubcookie only works on real domains, e.g., example.edu.'));
-    $domain = array_pop($parts);
-  }
-  else { // Parse out example.edu.
-    //        'example'                   '.'   'edu'
-    $domain = $parts[count($parts) - 2] . '.' . $parts[count($parts) -1];
-  }
+  $domain = pubcookie_default_domain();
 
   $form['pubcookie_domain'] = array(
     '#type' => 'textfield',
@@ -403,4 +394,22 @@ function pubcookie_ldap_search($username, $filter = NULL) {
   }
 
   return $records;
+}
+
+function pubcookie_default_domain() {
+  global $base_url; // http://www.example.edu/drupal
+  $array = explode('/', $base_url);
+  $base_domain = $array[2]; // www.example.edu
+  $parts = explode('.', $base_domain);
+
+  if (count($parts) == 1) {
+    drupal_set_message(t('Pubcookie only works on real domains, e.g., example.edu.'));
+    watchdog('pubcookie', 'Pubcookie only works on real domains, e.g., example.edu.');
+    $domain = array_pop($parts);
+  }
+  else { // Parse out example.edu.
+    //        'example'                   '.'   'edu'
+    $domain = $parts[count($parts) - 2] . '.' . $parts[count($parts) -1];
+  }
+  return $domain;
 }
