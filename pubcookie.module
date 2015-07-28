@@ -1,9 +1,13 @@
 <?php
-// $Id: pubcookie.module,v 1.10.2.3 2009/05/13 18:03:39 jvandyk Exp $
 
 /**
  * @file
- * Integrates pubcookie login system with Drupal.
+ * Integrates shibboleth login system with Drupal.
+ * This does not use pubcookie; it is a drop-in replacement for pubcookie
+ * that uses shibboleth instead.
+ *
+ * If you are looking for the original pubcookie module, download it from
+ * https://drupal.org/project/pubcookie
  */
 
 // Do you want the post-pubcookie-server-visit $_SERVER vars dumped to the screen
