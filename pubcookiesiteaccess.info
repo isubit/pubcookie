@@ -1,0 +1,13 @@
+; $Id: pubcookiesiteaccess.info,v 1.1.2.1 2009/05/13 18:03:39 jvandyk Exp $
+name = Pubcookie Site Access
+description = Restricts logins to a list of usernames.
+package = External authentication
+dependencies[] = pubcookie
+core = 6.x
+
+; Information added by drupal.org packaging script on 2009-05-13
+version = "6.x-1.2"
+core = "6.x"
+project = "pubcookie"
+datestamp = "1242239313"
+
