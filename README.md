@@ -4,7 +4,7 @@ Here is a quick and easy way to update from Pubcookie to Shibboleth authenticati
 
 The approach is to replace the pubcookie module with a version that has been modified to use Shibboleth.
 
-##Prequisites
+##Prerequisites
 
 You must have Shibboleth installed and working on your server before proceeding.
 
